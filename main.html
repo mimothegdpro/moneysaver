@@ -1,0 +1,1457 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+<title>Dirham — Savings Vault</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0F1E1B;
+    --bg-elevated:#16302B;
+    --bg-elevated-2:#1C3B34;
+    --ink:#F4EFE1;
+    --ink-muted:#B9C8C2;
+    --ink-faint:#7E948C;
+    --gold:#CBA135;
+    --gold-bright:#E4C465;
+    --sage:#6E9C8B;
+    --danger:#C1533A;
+    --danger-bright:#E07257;
+    --success:#6FA97A;
+    --rule:rgba(244,239,225,0.14);
+    --rule-strong:rgba(244,239,225,0.28);
+    --font-voice:'Fraunces', Georgia, serif;
+    --font-ui:'Manrope', -apple-system, BlinkMacSystemFont, sans-serif;
+    --radius:10px;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--bg);
+    color:var(--ink);
+    font-family:var(--font-ui);
+    line-height:1.55;
+    -webkit-font-smoothing:antialiased;
+    min-height:100vh;
+  }
+  ::selection{background:var(--gold); color:#1B2B2B;}
+  a{color:var(--gold-bright);}
+  h1,h2,h3{font-family:var(--font-voice); font-weight:600; margin:0; color:var(--ink);}
+  button{font-family:var(--font-ui);}
+  input, select, textarea{font-family:var(--font-ui);}
+
+  .wrap{max-width:920px; margin:0 auto; padding:0 20px 80px;}
+
+  /* ---------- header ---------- */
+  header.top{
+    border-bottom:1px solid var(--rule);
+    padding:22px 0 0;
+    margin-bottom:0;
+  }
+  .top-row{
+    display:flex; align-items:flex-start; justify-content:space-between; gap:16px;
+    max-width:920px; margin:0 auto; padding:0 20px 18px;
+  }
+  .brand h1{font-size:28px; letter-spacing:0.2px;}
+  .brand .tag{color:var(--ink-faint); font-size:13px; margin-top:4px;}
+  .icon-aed{color:var(--gold-bright); font-style:normal;}
+  .help-btn{
+    background:transparent; color:var(--ink);
+    border:1px solid var(--rule-strong); border-radius:999px;
+    padding:9px 18px; font-size:13px; font-weight:600; cursor:pointer;
+    white-space:nowrap; transition:border-color .15s ease, color .15s ease;
+  }
+  .help-btn:hover{border-color:var(--gold); color:var(--gold-bright);}
+  .help-btn:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visible, select:focus-visible, [tabindex]:focus-visible{
+    outline:2px solid var(--gold-bright); outline-offset:2px;
+  }
+
+  /* ---------- tabs ---------- */
+  nav.tabs{
+    display:flex; gap:2px; overflow-x:auto; scrollbar-width:none;
+    max-width:920px; margin:0 auto; padding:0 20px;
+    border-bottom:1px solid var(--rule);
+  }
+  nav.tabs::-webkit-scrollbar{display:none;}
+  nav.tabs button{
+    background:transparent; border:none; color:var(--ink-faint);
+    font-size:14px; font-weight:600; padding:14px 16px 13px;
+    cursor:pointer; white-space:nowrap; border-bottom:2px solid transparent;
+    margin-bottom:-1px; transition:color .15s ease, border-color .15s ease;
+  }
+  nav.tabs button:hover{color:var(--ink);}
+  nav.tabs button.active{color:var(--gold-bright); border-bottom-color:var(--gold-bright);}
+
+  main{padding-top:34px;}
+  .panel{display:none;}
+  .panel.active{display:block; animation:fadein .25s ease;}
+  @keyframes fadein{from{opacity:0; transform:translateY(4px);} to{opacity:1; transform:translateY(0);}}
+
+  section + section{margin-top:40px; padding-top:36px; border-top:1px solid var(--rule);}
+
+  .eyebrow{color:var(--ink-faint); font-size:13px; margin:0 0 6px;}
+  .lede{color:var(--ink-muted); font-size:14.5px; max-width:60ch; margin:8px 0 0;}
+
+  /* ---------- hero stat ---------- */
+  .hero{padding:6px 0 8px;}
+  .hero .figure{
+    font-family:var(--font-voice); font-weight:600; font-size:clamp(40px,9vw,68px);
+    color:var(--gold-bright); line-height:1.05; margin:6px 0 4px;
+  }
+  .hero .figure small{font-size:0.4em; color:var(--ink-muted); font-weight:400; margin-right:6px;}
+  .hero .caption{color:var(--ink-muted); font-size:14.5px;}
+  .stat-row{
+    display:flex; flex-wrap:wrap; gap:28px 40px; margin-top:26px; padding-top:22px;
+    border-top:1px solid var(--rule);
+  }
+  .stat-row .stat .num{font-family:var(--font-voice); font-size:22px; color:var(--ink);}
+  .stat-row .stat .num.warn{color:var(--danger-bright);}
+  .stat-row .stat .num.good{color:var(--success);}
+  .stat-row .stat .lab{font-size:12.5px; color:var(--ink-faint); margin-top:2px;}
+
+  .banner{
+    margin-top:24px; padding:14px 16px; border-radius:var(--radius);
+    font-size:13.5px; border:1px solid var(--rule-strong);
+    display:flex; gap:10px; align-items:flex-start;
+  }
+  .banner.warn{border-color:rgba(193,83,58,0.5); background:rgba(193,83,58,0.08); color:#F0C4B7;}
+  .banner.good{border-color:rgba(111,169,122,0.4); background:rgba(111,169,122,0.08); color:#CDE8D2;}
+  .banner .dot{flex:0 0 auto; margin-top:5px; width:6px; height:6px; border-radius:50%; background:currentColor;}
+
+  /* ---------- form controls ---------- */
+  .field{margin-bottom:18px;}
+  .field label{display:block; font-size:13px; color:var(--ink-muted); margin-bottom:7px; font-weight:600;}
+  .field .hint{font-size:12px; color:var(--ink-faint); margin-top:6px;}
+  .amount-input{position:relative;}
+  .amount-input .prefix{
+    position:absolute; left:14px; top:50%; transform:translateY(-50%);
+    color:var(--ink-faint); font-size:14px; font-weight:600; pointer-events:none;
+  }
+  .amount-input input{padding-left:52px;}
+  input[type="number"], input[type="text"]{
+    width:100%; background:var(--bg-elevated); border:1px solid var(--rule-strong);
+    color:var(--ink); border-radius:var(--radius); padding:12px 14px; font-size:15px;
+    transition:border-color .15s ease;
+  }
+  input[type="number"]:focus, input[type="text"]:focus{border-color:var(--gold); outline:none;}
+  input[type="number"]::-webkit-outer-spin-button, input[type="number"]::-webkit-inner-spin-button{opacity:0.5;}
+  textarea{
+    width:100%; background:var(--bg-elevated); border:1px solid var(--rule-strong);
+    color:var(--ink); border-radius:var(--radius); padding:14px; font-size:13px;
+    font-family:'Courier New', monospace; resize:vertical; min-height:110px; line-height:1.6;
+  }
+  textarea:focus{border-color:var(--gold); outline:none;}
+
+  .row2{display:grid; grid-template-columns:1fr 1fr; gap:18px 20px;}
+  @media (max-width:600px){.row2{grid-template-columns:1fr;}}
+
+  .toggle-row{
+    display:flex; align-items:center; justify-content:space-between; gap:16px;
+    padding:16px 0; border-top:1px solid var(--rule);
+  }
+  .toggle-row:first-of-type{border-top:none; padding-top:0;}
+  .toggle-row .t-label{font-size:14.5px; font-weight:600; color:var(--ink);}
+  .toggle-row .t-sub{font-size:12.5px; color:var(--ink-faint); margin-top:3px;}
+  .switch{
+    position:relative; width:44px; height:26px; flex:0 0 auto; border-radius:999px;
+    background:var(--bg-elevated-2); border:1px solid var(--rule-strong); cursor:pointer;
+    transition:background .15s ease, border-color .15s ease;
+  }
+  .switch .knob{
+    position:absolute; top:2px; left:2px; width:20px; height:20px; border-radius:50%;
+    background:var(--ink-faint); transition:transform .18s ease, background .18s ease;
+  }
+  .switch.on{background:rgba(203,161,53,0.22); border-color:var(--gold);}
+  .switch.on .knob{transform:translateX(18px); background:var(--gold-bright);}
+
+  /* ---------- buttons ---------- */
+  .btn{
+    display:inline-flex; align-items:center; gap:8px; cursor:pointer;
+    border-radius:999px; padding:11px 22px; font-size:13.5px; font-weight:700;
+    border:1px solid var(--rule-strong); background:transparent; color:var(--ink);
+    transition:border-color .15s ease, background .15s ease, color .15s ease, opacity .15s ease;
+  }
+  .btn:hover{border-color:var(--gold);}
+  .btn.primary{background:var(--gold); border-color:var(--gold); color:#20180A;}
+  .btn.primary:hover{background:var(--gold-bright); border-color:var(--gold-bright);}
+  .btn.ghost{border-color:transparent; color:var(--ink-muted); padding:11px 4px;}
+  .btn.ghost:hover{color:var(--gold-bright);}
+  .btn.danger{color:var(--danger-bright); border-color:rgba(193,83,58,0.5);}
+  .btn.danger:hover{background:rgba(193,83,58,0.12); border-color:var(--danger-bright);}
+  .btn:disabled{opacity:0.45; cursor:not-allowed;}
+  .btn-row{display:flex; gap:12px; flex-wrap:wrap; margin-top:22px;}
+
+  /* ---------- category list ---------- */
+  .cat-list{margin-top:8px;}
+  .cat-row{
+    display:grid; grid-template-columns:1fr 160px 34px; align-items:center; gap:14px;
+    padding:14px 0; border-top:1px solid var(--rule);
+  }
+  .cat-row:first-child{border-top:none;}
+  .cat-name{display:flex; flex-direction:column; gap:2px;}
+  .cat-name .n{font-size:14.5px; font-weight:600;}
+  .cat-name .lock{font-size:11.5px; color:var(--ink-faint);}
+  .cat-row input{text-align:right; padding:10px 12px 10px 34px;}
+  .cat-remove{
+    background:transparent; border:1px solid var(--rule-strong); color:var(--ink-faint);
+    width:32px; height:32px; border-radius:50%; cursor:pointer; font-size:16px; line-height:1;
+  }
+  .cat-remove:hover{color:var(--danger-bright); border-color:var(--danger-bright);}
+  .add-cat{
+    display:grid; grid-template-columns:1fr 160px 34px; gap:14px; align-items:center; margin-top:16px;
+  }
+
+  /* ---------- breakdown ---------- */
+  .donut-wrap{display:flex; gap:36px; align-items:center; flex-wrap:wrap; margin-top:8px;}
+  .donut{
+    width:190px; height:190px; border-radius:50%; flex:0 0 auto;
+    display:flex; align-items:center; justify-content:center; position:relative;
+  }
+  .donut .hole{
+    width:64%; height:64%; border-radius:50%; background:var(--bg);
+    display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center;
+  }
+  .donut .hole .n{font-family:var(--font-voice); font-size:20px; color:var(--gold-bright);}
+  .donut .hole .l{font-size:10.5px; color:var(--ink-faint); margin-top:2px;}
+  .legend{flex:1; min-width:220px;}
+  .legend-row{
+    display:flex; align-items:center; gap:12px; padding:9px 0; border-top:1px solid var(--rule);
+  }
+  .legend-row:first-child{border-top:none;}
+  .swatch{width:11px; height:11px; border-radius:2px; flex:0 0 auto;}
+  .legend-row .lname{flex:1; font-size:13.5px;}
+  .legend-row .lamt{font-size:13.5px; color:var(--ink-muted);}
+  .legend-row .lpct{font-size:12.5px; color:var(--ink-faint); width:42px; text-align:right;}
+
+  /* ---------- plan / goal ---------- */
+  .progress-track{
+    height:10px; border-radius:999px; background:var(--bg-elevated-2); overflow:hidden;
+    border:1px solid var(--rule);
+  }
+  .progress-fill{height:100%; background:linear-gradient(90deg, var(--gold), var(--gold-bright)); border-radius:999px; transition:width .3s ease;}
+  .progress-caption{display:flex; justify-content:space-between; font-size:12.5px; color:var(--ink-faint); margin-top:8px;}
+
+  ul.tips{margin:14px 0 0; padding:0; list-style:none;}
+  ul.tips li{
+    padding:12px 0 12px 22px; border-top:1px solid var(--rule); position:relative; font-size:14px; color:var(--ink-muted);
+  }
+  ul.tips li:first-child{border-top:none;}
+  ul.tips li::before{content:"·"; position:absolute; left:4px; top:10px; color:var(--gold-bright); font-size:22px; line-height:1;}
+
+  table.hist{width:100%; border-collapse:collapse; margin-top:8px; font-size:13.5px;}
+  table.hist th{
+    text-align:left; font-size:11.5px; color:var(--ink-faint); font-weight:700;
+    text-transform:none; padding:0 10px 10px 0; border-bottom:1px solid var(--rule-strong);
+  }
+  table.hist td{padding:11px 10px 11px 0; border-bottom:1px solid var(--rule); color:var(--ink-muted);}
+  table.hist td.pos{color:var(--success);}
+  table.hist td.neg{color:var(--danger-bright);}
+  table.hist tr:last-child td{border-bottom:none;}
+  .empty-row{color:var(--ink-faint); font-style:italic; padding:16px 0;}
+
+  /* ---------- game ---------- */
+  .game-shell{
+    border:1px solid var(--rule-strong); border-radius:var(--radius); overflow:hidden; background:var(--bg-elevated);
+  }
+  #gameCanvas{display:block; width:100%; height:420px; touch-action:none; background:linear-gradient(180deg, #142B26, #0F211D);}
+  .game-hud{
+    display:flex; flex-wrap:wrap; gap:20px; align-items:center; justify-content:space-between;
+    padding:14px 16px; border-top:1px solid var(--rule);
+  }
+  .game-hud .stats{display:flex; gap:22px; flex-wrap:wrap; font-size:13px; color:var(--ink-muted);}
+  .game-hud .stats b{color:var(--ink); font-family:var(--font-voice); font-size:15px; margin-left:4px;}
+  .game-controls{display:flex; gap:10px;}
+  .game-note{font-size:12.5px; color:var(--ink-faint); margin-top:14px;}
+
+  /* ---------- save/load ---------- */
+  .code-box{position:relative;}
+  .copy-btn{
+    position:absolute; top:10px; right:10px; background:var(--bg-elevated-2);
+    border:1px solid var(--rule-strong); color:var(--ink-muted); font-size:11.5px; font-weight:700;
+    padding:6px 12px; border-radius:999px; cursor:pointer;
+  }
+  .copy-btn:hover{color:var(--gold-bright); border-color:var(--gold);}
+  .save-status{font-size:12.5px; color:var(--success); margin-top:10px; min-height:16px;}
+  .save-status.err{color:var(--danger-bright);}
+
+  /* ---------- modal ---------- */
+  .modal-veil{
+    position:fixed; inset:0; background:rgba(6,14,12,0.72); display:none;
+    align-items:center; justify-content:center; padding:20px; z-index:50;
+  }
+  .modal-veil.show{display:flex;}
+  .modal{
+    background:var(--bg-elevated); border:1px solid var(--rule-strong); border-radius:16px;
+    max-width:480px; width:100%; padding:28px 26px 24px; max-height:86vh; overflow-y:auto;
+  }
+  .modal h3{font-size:20px; margin-bottom:10px;}
+  .modal .step-count{font-size:12px; color:var(--ink-faint); margin-bottom:14px;}
+  .modal p{font-size:14.5px; color:var(--ink-muted); margin:0 0 8px;}
+  .modal-foot{display:flex; justify-content:space-between; align-items:center; margin-top:24px; gap:10px;}
+  .dots{display:flex; gap:6px;}
+  .dots span{width:6px; height:6px; border-radius:50%; background:var(--rule-strong);}
+  .dots span.on{background:var(--gold-bright);}
+
+  .sr-only{position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0;}
+
+  footer.foot{
+    max-width:920px; margin:0 auto; padding:36px 20px 0; color:var(--ink-faint); font-size:12px;
+    text-align:center;
+  }
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="top-row">
+    <div class="brand">
+      <h1>Dirham<span class="icon-aed">.</span></h1>
+      <p class="tag">Your monthly savings vault, in AED</p>
+    </div>
+    <button class="help-btn" id="openHelp" type="button">Tutorial</button>
+  </div>
+  <nav class="tabs" role="tablist" aria-label="Sections">
+    <button class="active" data-tab="overview" role="tab" aria-selected="true">Overview</button>
+    <button data-tab="income" role="tab" aria-selected="false">Income &amp; spending</button>
+    <button data-tab="breakdown" role="tab" aria-selected="false">Breakdown</button>
+    <button data-tab="plan" role="tab" aria-selected="false">Savings plan</button>
+    <button data-tab="game" role="tab" aria-selected="false">Coin Vault (game)</button>
+    <button data-tab="saveload" role="tab" aria-selected="false">Save &amp; load</button>
+  </nav>
+</header>
+
+<main class="wrap">
+
+  <!-- ================= OVERVIEW ================= -->
+  <section class="panel active" id="panel-overview">
+    <div class="hero">
+      <p class="eyebrow">Projected for next month</p>
+      <div class="figure"><small>AED</small><span id="heroSavings">0</span></div>
+      <p class="caption" id="heroCaption">Fill in your income and spending to see your number.</p>
+    </div>
+
+    <div class="stat-row">
+      <div class="stat">
+        <div class="num" id="statIncome">AED 0</div>
+        <div class="lab">Monthly salary</div>
+      </div>
+      <div class="stat">
+        <div class="num" id="statSpent">AED 0</div>
+        <div class="lab">Planned spending this month</div>
+      </div>
+      <div class="stat">
+        <div class="num" id="statLastMonth">AED 0</div>
+        <div class="lab">Spent last month</div>
+      </div>
+      <div class="stat">
+        <div class="num" id="statRate">0%</div>
+        <div class="lab">Savings rate</div>
+      </div>
+    </div>
+
+    <div id="overviewBanner"></div>
+
+    <section>
+      <p class="eyebrow">Quick setup</p>
+      <h2 style="font-size:20px; margin-bottom:18px;">Your basics</h2>
+      <div class="row2">
+        <div class="field">
+          <label for="inpSalary">Monthly salary (AED)</label>
+          <div class="amount-input">
+            <span class="prefix">AED</span>
+            <input type="number" id="inpSalary" min="0" step="1" placeholder="0" inputmode="decimal">
+          </div>
+        </div>
+        <div class="field">
+          <label for="inpLastMonth">Total you spent last month (AED)</label>
+          <div class="amount-input">
+            <span class="prefix">AED</span>
+            <input type="number" id="inpLastMonth" min="0" step="1" placeholder="0" inputmode="decimal">
+          </div>
+          <p class="hint">Just for comparison — this month's plan comes from the Income &amp; spending tab.</p>
+        </div>
+      </div>
+
+      <div class="toggle-row" style="border-top:1px solid var(--rule); margin-top:6px;">
+        <div>
+          <div class="t-label">School fees for kids</div>
+          <div class="t-sub">Keeps a locked line item for tuition, separate from everything else</div>
+        </div>
+        <div class="switch" id="schoolSwitch" role="switch" aria-checked="false" tabindex="0"><div class="knob"></div></div>
+      </div>
+      <div class="field" id="schoolAmountField" style="display:none; margin-top:14px;">
+        <label for="inpSchoolFees">School fees amount (AED / month)</label>
+        <div class="amount-input">
+          <span class="prefix">AED</span>
+          <input type="number" id="inpSchoolFees" min="0" step="1" placeholder="0" inputmode="decimal">
+        </div>
+        <p class="hint">This stays a fixed, locked line in your spending — you can change the amount here any time, but it won't affect your other categories.</p>
+      </div>
+    </section>
+  </section>
+
+  <!-- ================= INCOME & SPENDING ================= -->
+  <section class="panel" id="panel-income">
+    <p class="eyebrow">Income &amp; spending</p>
+    <h2 style="font-size:22px;">Where this month's money is going</h2>
+    <p class="lede">The locked categories cover the essentials most households have. Add your own for anything extra — subscriptions, hobbies, dining out.</p>
+
+    <div class="cat-list" id="categoryList"></div>
+
+    <div class="add-cat">
+      <input type="text" id="newCatName" placeholder="New category name">
+      <div class="amount-input">
+        <span class="prefix">AED</span>
+        <input type="number" id="newCatAmount" min="0" step="1" placeholder="0" style="padding-left:44px;">
+      </div>
+      <button class="cat-remove" id="addCatBtn" title="Add category" style="color:var(--gold-bright); border-color:var(--gold);">+</button>
+    </div>
+
+    <div class="banner good" style="margin-top:28px;">
+      <span class="dot"></span>
+      <span>Total planned spending: <strong id="totalSpendingLine">AED 0</strong> of <strong id="incomeLine">AED 0</strong> income.</span>
+    </div>
+  </section>
+
+  <!-- ================= BREAKDOWN ================= -->
+  <section class="panel" id="panel-breakdown">
+    <p class="eyebrow">Breakdown</p>
+    <h2 style="font-size:22px;">What you actually spend on</h2>
+    <p class="lede">A category taking up more than a third of your spending is usually the fastest place to find extra savings.</p>
+
+    <div class="donut-wrap">
+      <div class="donut" id="donutChart" role="img" aria-label="Spending breakdown by category">
+        <div class="hole">
+          <div class="n" id="donutTotal">AED 0</div>
+          <div class="l">total / month</div>
+        </div>
+      </div>
+      <div class="legend" id="legendList"></div>
+    </div>
+
+    <div id="breakdownInsight" style="margin-top:26px;"></div>
+  </section>
+
+  <!-- ================= SAVINGS PLAN ================= -->
+  <section class="panel" id="panel-plan">
+    <p class="eyebrow">Savings plan</p>
+    <h2 style="font-size:22px;">Set a goal, track your streak</h2>
+
+    <div class="field" style="max-width:320px; margin-top:18px;">
+      <label for="inpGoal">Monthly savings goal (AED)</label>
+      <div class="amount-input">
+        <span class="prefix">AED</span>
+        <input type="number" id="inpGoal" min="0" step="1" placeholder="0" inputmode="decimal">
+      </div>
+    </div>
+
+    <div style="margin-top:8px;">
+      <div class="progress-track"><div class="progress-fill" id="goalFill" style="width:0%;"></div></div>
+      <div class="progress-caption">
+        <span id="goalCaptionLeft">AED 0 projected</span>
+        <span id="goalCaptionRight">Goal: AED 0</span>
+      </div>
+    </div>
+
+    <section>
+      <p class="eyebrow">Tips for next month</p>
+      <ul class="tips" id="tipsList"></ul>
+    </section>
+
+    <section>
+      <p class="eyebrow">Log this month</p>
+      <p class="lede">When the month ends, lock in what you actually saved — it builds your history below.</p>
+      <div class="btn-row" style="margin-top:14px;">
+        <button class="btn primary" id="logMonthBtn" type="button">Log this month's savings</button>
+      </div>
+    </section>
+
+    <section>
+      <p class="eyebrow">History</p>
+      <table class="hist">
+        <thead><tr><th>Logged on</th><th>Salary</th><th>Spending</th><th>Saved</th></tr></thead>
+        <tbody id="historyBody"></tbody>
+      </table>
+      <p class="empty-row" id="historyEmpty">No months logged yet — your first entry will show up here.</p>
+    </section>
+  </section>
+
+  <!-- ================= GAME ================= -->
+  <section class="panel" id="panel-game">
+    <p class="eyebrow">Coin Vault</p>
+    <h2 style="font-size:22px;">Catch the dirhams, dodge the bills</h2>
+    <p class="lede">Move the vault with your mouse, finger, or the arrow keys. Catch gold coins, avoid red bills — three misses and it's over.</p>
+
+    <div class="game-shell" style="margin-top:20px;">
+      <canvas id="gameCanvas" width="900" height="420" aria-label="Coin Vault game canvas"></canvas>
+      <div class="game-hud">
+        <div class="stats">
+          Score<b id="gScore">0</b>
+          Lives<b id="gLives">3</b>
+          Best<b id="gBest">0</b>
+        </div>
+        <div class="game-controls">
+          <button class="btn primary" id="gStart" type="button">Start</button>
+          <button class="btn" id="gPause" type="button" disabled>Pause</button>
+        </div>
+      </div>
+    </div>
+    <p class="game-note">Your best score is saved automatically along with the rest of your data.</p>
+  </section>
+
+  <!-- ================= SAVE & LOAD ================= -->
+  <section class="panel" id="panel-saveload">
+    <p class="eyebrow">Save &amp; load</p>
+    <h2 style="font-size:22px;">Carry your data anywhere</h2>
+    <p class="lede">Everything is also saved automatically in this browser. Use a save code if you want to move your data to another device, or keep a backup.</p>
+
+    <section>
+      <p class="eyebrow">Save</p>
+      <p style="font-size:14px; color:var(--ink-muted); margin:8px 0 16px;">Press save to turn everything you've entered into a code — just a line of numbers.</p>
+      <div class="btn-row" style="margin-top:0;">
+        <button class="btn primary" id="genCodeBtn" type="button">Save and generate code</button>
+      </div>
+      <div class="code-box" style="margin-top:16px;">
+        <textarea id="saveCode" readonly placeholder="Your save code will appear here"></textarea>
+        <button class="copy-btn" id="copyCodeBtn" type="button">Copy</button>
+      </div>
+      <div class="save-status" id="saveStatus"></div>
+    </section>
+
+    <section>
+      <p class="eyebrow">Load</p>
+      <p style="font-size:14px; color:var(--ink-muted); margin:8px 0 16px;">Paste a save code below to restore it. This replaces what's currently entered.</p>
+      <textarea id="loadCode" placeholder="Paste your line of numbers here"></textarea>
+      <div class="btn-row">
+        <button class="btn primary" id="loadCodeBtn" type="button">Load code</button>
+      </div>
+      <div class="save-status" id="loadStatus"></div>
+    </section>
+
+    <section>
+      <p class="eyebrow">Reset</p>
+      <p style="font-size:14px; color:var(--ink-muted); margin:8px 0 16px;">Clear everything on this device and start over.</p>
+      <button class="btn danger" id="resetAllBtn" type="button">Reset all data</button>
+    </section>
+  </section>
+
+</main>
+
+<footer class="foot">Dirham keeps every number on your own device, unless you copy a save code somewhere yourself.</footer>
+
+<!-- ================= TUTORIAL MODAL ================= -->
+<div class="modal-veil" id="helpVeil">
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="helpTitle">
+    <p class="step-count" id="helpStepCount">Step 1 of 7</p>
+    <h3 id="helpTitle"></h3>
+    <div id="helpBody"></div>
+    <div class="modal-foot">
+      <div class="dots" id="helpDots"></div>
+      <div style="display:flex; gap:10px;">
+        <button class="btn ghost" id="helpBack" type="button">Back</button>
+        <button class="btn primary" id="helpNext" type="button">Next</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+
+  /* ============================================================
+     STATE
+  ============================================================ */
+  var DEFAULT_STATE = {
+    salary: 0,
+    lastMonthSpent: 0,
+    schoolFeesOn: false,
+    schoolFeesAmount: 0,
+    categories: [
+      {id:"rent", name:"Rent / housing", amount:0, locked:true},
+      {id:"groceries", name:"Groceries", amount:0, locked:true},
+      {id:"transport", name:"Transport", amount:0, locked:true},
+      {id:"utilities", name:"Utilities & bills", amount:0, locked:true},
+      {id:"other", name:"Other / misc", amount:0, locked:true}
+    ],
+    goal: 0,
+    history: [],
+    highScore: 0,
+    nextCatId: 1
+  };
+
+  var STORAGE_KEY = "dirham_savings_state_v1";
+  var state = loadFromStorage() || deepClone(DEFAULT_STATE);
+
+  function deepClone(o){ return JSON.parse(JSON.stringify(o)); }
+
+  function loadFromStorage(){
+    try{
+      var raw = window.localStorage.getItem(STORAGE_KEY);
+      if(!raw) return null;
+      var parsed = JSON.parse(raw);
+      return sanitizeState(parsed);
+    }catch(e){ return null; }
+  }
+
+  function persist(){
+    try{ window.localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); }
+    catch(e){ /* storage unavailable — app still works in-session */ }
+  }
+
+  function sanitizeState(input){
+    var s = deepClone(DEFAULT_STATE);
+    if(!input || typeof input !== "object") return s;
+    if(typeof input.salary === "number") s.salary = clampNum(input.salary);
+    if(typeof input.lastMonthSpent === "number") s.lastMonthSpent = clampNum(input.lastMonthSpent);
+    if(typeof input.schoolFeesOn === "boolean") s.schoolFeesOn = input.schoolFeesOn;
+    if(typeof input.schoolFeesAmount === "number") s.schoolFeesAmount = clampNum(input.schoolFeesAmount);
+    if(Array.isArray(input.categories) && input.categories.length){
+      s.categories = input.categories
+        .filter(function(c){ return c && typeof c.name === "string"; })
+        .map(function(c){
+          return { id: c.id || ("cat"+Math.random().toString(36).slice(2,8)),
+                   name: String(c.name).slice(0,40),
+                   amount: clampNum(c.amount),
+                   locked: !!c.locked };
+        });
+      var hasLocked = s.categories.some(function(c){ return c.locked; });
+      if(!hasLocked){
+        s.categories = DEFAULT_STATE.categories.map(function(c){ return Object.assign({}, c); }).concat(s.categories);
+      }
+    }
+    if(typeof input.goal === "number") s.goal = clampNum(input.goal);
+    if(Array.isArray(input.history)) s.history = input.history.filter(function(h){
+      return h && typeof h.saved === "number";
+    }).slice(-200);
+    if(typeof input.highScore === "number") s.highScore = clampNum(input.highScore);
+    if(typeof input.nextCatId === "number") s.nextCatId = input.nextCatId;
+    return s;
+  }
+
+  function clampNum(n){
+    n = Number(n);
+    if(!isFinite(n) || isNaN(n) || n < 0) return 0;
+    return Math.round(n * 100) / 100;
+  }
+
+  function fmt(n){
+    n = clampNum(n);
+    return "AED " + Math.round(n).toLocaleString("en-US");
+  }
+
+  /* ============================================================
+     TABS
+  ============================================================ */
+  var tabButtons = document.querySelectorAll("nav.tabs button");
+  var panels = document.querySelectorAll(".panel");
+  tabButtons.forEach(function(btn){
+    btn.addEventListener("click", function(){
+      tabButtons.forEach(function(b){ b.classList.remove("active"); b.setAttribute("aria-selected","false"); });
+      panels.forEach(function(p){ p.classList.remove("active"); });
+      btn.classList.add("active");
+      btn.setAttribute("aria-selected","true");
+      var target = document.getElementById("panel-" + btn.dataset.tab);
+      if(target) target.classList.add("active");
+      if(btn.dataset.tab !== "game"){ pauseGame(); }
+    });
+  });
+
+  /* ============================================================
+     OVERVIEW TAB
+  ============================================================ */
+  var inpSalary = document.getElementById("inpSalary");
+  var inpLastMonth = document.getElementById("inpLastMonth");
+  var schoolSwitch = document.getElementById("schoolSwitch");
+  var schoolAmountField = document.getElementById("schoolAmountField");
+  var inpSchoolFees = document.getElementById("inpSchoolFees");
+
+  function refreshOverviewInputs(){
+    inpSalary.value = state.salary || "";
+    inpLastMonth.value = state.lastMonthSpent || "";
+    inpSchoolFees.value = state.schoolFeesAmount || "";
+    setSwitch(schoolSwitch, state.schoolFeesOn);
+    schoolAmountField.style.display = state.schoolFeesOn ? "block" : "none";
+  }
+
+  function setSwitch(el, on){
+    el.classList.toggle("on", !!on);
+    el.setAttribute("aria-checked", on ? "true" : "false");
+  }
+
+  inpSalary.addEventListener("input", function(){
+    state.salary = clampNum(this.value);
+    persist(); renderAll();
+  });
+  inpLastMonth.addEventListener("input", function(){
+    state.lastMonthSpent = clampNum(this.value);
+    persist(); renderAll();
+  });
+  inpSchoolFees.addEventListener("input", function(){
+    state.schoolFeesAmount = clampNum(this.value);
+    persist(); renderAll();
+  });
+  function toggleSchool(){
+    state.schoolFeesOn = !state.schoolFeesOn;
+    schoolAmountField.style.display = state.schoolFeesOn ? "block" : "none";
+    persist(); renderAll();
+  }
+  schoolSwitch.addEventListener("click", toggleSchool);
+  schoolSwitch.addEventListener("keydown", function(e){
+    if(e.key === "Enter" || e.key === " "){ e.preventDefault(); toggleSchool(); }
+  });
+
+  /* ============================================================
+     INCOME & SPENDING TAB — categories
+  ============================================================ */
+  var categoryList = document.getElementById("categoryList");
+  var newCatName = document.getElementById("newCatName");
+  var newCatAmount = document.getElementById("newCatAmount");
+  var addCatBtn = document.getElementById("addCatBtn");
+
+  function allCategoriesForCalc(){
+    var list = state.categories.slice();
+    if(state.schoolFeesOn){
+      list.push({id:"__schoolfees", name:"School fees (kids)", amount: state.schoolFeesAmount, locked:true});
+    }
+    return list;
+  }
+
+  function renderCategoryList(){
+    categoryList.innerHTML = "";
+    state.categories.forEach(function(cat){
+      var row = document.createElement("div");
+      row.className = "cat-row";
+
+      var nameWrap = document.createElement("div");
+      nameWrap.className = "cat-name";
+      var n = document.createElement("div");
+      n.className = "n";
+      n.textContent = cat.name;
+      nameWrap.appendChild(n);
+      if(cat.locked){
+        var lock = document.createElement("div");
+        lock.className = "lock";
+        lock.textContent = "Fixed category";
+        nameWrap.appendChild(lock);
+      }
+      row.appendChild(nameWrap);
+
+      var amtWrap = document.createElement("div");
+      amtWrap.className = "amount-input";
+      var prefix = document.createElement("span");
+      prefix.className = "prefix";
+      prefix.textContent = "AED";
+      var amtInput = document.createElement("input");
+      amtInput.type = "number";
+      amtInput.min = "0";
+      amtInput.step = "1";
+      amtInput.value = cat.amount || "";
+      amtInput.placeholder = "0";
+      amtInput.addEventListener("input", function(){
+        cat.amount = clampNum(this.value);
+        persist(); renderAll();
+      });
+      amtWrap.appendChild(prefix);
+      amtWrap.appendChild(amtInput);
+      row.appendChild(amtWrap);
+
+      var removeBtn = document.createElement("button");
+      removeBtn.className = "cat-remove";
+      removeBtn.type = "button";
+      if(cat.locked){
+        removeBtn.style.visibility = "hidden";
+        removeBtn.textContent = "";
+      } else {
+        removeBtn.textContent = "\u00D7";
+        removeBtn.title = "Remove category";
+        removeBtn.addEventListener("click", function(){
+          state.categories = state.categories.filter(function(c){ return c.id !== cat.id; });
+          persist(); renderAll();
+        });
+      }
+      row.appendChild(removeBtn);
+
+      categoryList.appendChild(row);
+    });
+  }
+
+  addCatBtn.addEventListener("click", function(){
+    var name = newCatName.value.trim();
+    var amount = clampNum(newCatAmount.value);
+    if(!name){
+      newCatName.style.borderColor = "var(--danger-bright)";
+      newCatName.focus();
+      return;
+    }
+    newCatName.style.borderColor = "";
+    state.categories.push({ id:"cat" + state.nextCatId++, name:name.slice(0,40), amount:amount, locked:false });
+    newCatName.value = "";
+    newCatAmount.value = "";
+    persist(); renderAll();
+  });
+
+  /* ============================================================
+     CALCULATIONS
+  ============================================================ */
+  function totalSpending(){
+    return allCategoriesForCalc().reduce(function(sum, c){ return sum + (c.amount || 0); }, 0);
+  }
+  function projectedSavings(){
+    return state.salary - totalSpending();
+  }
+
+  /* ============================================================
+     RENDER: OVERVIEW
+  ============================================================ */
+  var heroSavings = document.getElementById("heroSavings");
+  var heroCaption = document.getElementById("heroCaption");
+  var statIncome = document.getElementById("statIncome");
+  var statSpent = document.getElementById("statSpent");
+  var statLastMonth = document.getElementById("statLastMonth");
+  var statRate = document.getElementById("statRate");
+  var overviewBanner = document.getElementById("overviewBanner");
+  var totalSpendingLine = document.getElementById("totalSpendingLine");
+  var incomeLine = document.getElementById("incomeLine");
+
+  function renderOverview(){
+    var spend = totalSpending();
+    var saved = projectedSavings();
+    var rate = state.salary > 0 ? Math.round((saved / state.salary) * 100) : 0;
+
+    heroSavings.textContent = Math.round(saved).toLocaleString("en-US");
+    heroSavings.style.color = saved < 0 ? "var(--danger-bright)" : "var(--gold-bright)";
+
+    if(state.salary === 0 && spend === 0){
+      heroCaption.textContent = "Fill in your income and spending to see your number.";
+    } else if(saved < 0){
+      heroCaption.textContent = "You're planning to spend more than you earn this month.";
+    } else if(rate >= 20){
+      heroCaption.textContent = "A strong month — you're on track to save " + rate + "% of your salary.";
+    } else {
+      heroCaption.textContent = "On track to save " + rate + "% of your salary this month.";
+    }
+
+    statIncome.textContent = fmt(state.salary);
+    statSpent.textContent = fmt(spend);
+    statLastMonth.textContent = fmt(state.lastMonthSpent);
+    statRate.textContent = rate + "%";
+    statRate.className = "num " + (rate < 0 ? "warn" : rate >= 20 ? "good" : "");
+
+    overviewBanner.innerHTML = "";
+    if(saved < 0){
+      overviewBanner.innerHTML = '<div class="banner warn"><span class="dot"></span><span>Your planned spending is <strong>' + fmt(Math.abs(saved)) + '</strong> more than your salary. Check the Income &amp; spending tab to find room to cut back.</span></div>';
+    } else if(state.salary > 0 && spend > 0 && state.lastMonthSpent > 0 && spend < state.lastMonthSpent){
+      overviewBanner.innerHTML = '<div class="banner good"><span class="dot"></span><span>You\'re planning to spend <strong>' + fmt(state.lastMonthSpent - spend) + '</strong> less than last month.</span></div>';
+    }
+
+    totalSpendingLine.textContent = fmt(spend);
+    incomeLine.textContent = fmt(state.salary);
+  }
+
+  /* ============================================================
+     RENDER: BREAKDOWN
+  ============================================================ */
+  var donutChart = document.getElementById("donutChart");
+  var donutTotal = document.getElementById("donutTotal");
+  var legendList = document.getElementById("legendList");
+  var breakdownInsight = document.getElementById("breakdownInsight");
+
+  var PALETTE = ["#CBA135", "#6E9C8B", "#C1533A", "#8AA6C2", "#B084C4", "#D8C36A", "#7FB0A0", "#C77A4F"];
+
+  function renderBreakdown(){
+    var cats = allCategoriesForCalc().filter(function(c){ return c.amount > 0; });
+    var total = cats.reduce(function(s,c){ return s + c.amount; }, 0);
+    donutTotal.textContent = fmt(total);
+
+    if(total === 0){
+      donutChart.style.background = "var(--bg-elevated-2)";
+      legendList.innerHTML = '<p class="empty-row" style="padding:8px 0;">Add amounts in Income &amp; spending to see your breakdown.</p>';
+      breakdownInsight.innerHTML = "";
+      return;
+    }
+
+    var gradientParts = [];
+    var cursor = 0;
+    var legendHtml = "";
+    var maxCat = cats[0];
+
+    cats.sort(function(a,b){ return b.amount - a.amount; });
+    maxCat = cats[0];
+
+    cats.forEach(function(c, i){
+      var pct = (c.amount / total) * 100;
+      var color = PALETTE[i % PALETTE.length];
+      gradientParts.push(color + " " + cursor + "% " + (cursor + pct) + "%");
+      cursor += pct;
+      legendHtml += '<div class="legend-row">' +
+        '<span class="swatch" style="background:' + color + ';"></span>' +
+        '<span class="lname">' + escapeHtml(c.name) + '</span>' +
+        '<span class="lamt">' + fmt(c.amount) + '</span>' +
+        '<span class="lpct">' + Math.round(pct) + '%</span>' +
+        '</div>';
+    });
+
+    donutChart.style.background = "conic-gradient(" + gradientParts.join(", ") + ")";
+    legendList.innerHTML = legendHtml;
+
+    var topPct = Math.round((maxCat.amount / total) * 100);
+    var msg = "";
+    if(topPct >= 45){
+      msg = '<div class="banner warn"><span class="dot"></span><span><strong>' + escapeHtml(maxCat.name) + '</strong> alone makes up ' + topPct + '% of your spending. Even a small cut here moves your savings the most.</span></div>';
+    } else {
+      msg = '<div class="banner good"><span class="dot"></span><span>Your biggest category is <strong>' + escapeHtml(maxCat.name) + '</strong> at ' + topPct + '% of total spending — a fairly balanced spread.</span></div>';
+    }
+    breakdownInsight.innerHTML = msg;
+  }
+
+  function escapeHtml(s){
+    return String(s).replace(/[&<>"']/g, function(c){
+      return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c];
+    });
+  }
+
+  /* ============================================================
+     RENDER: SAVINGS PLAN
+  ============================================================ */
+  var inpGoal = document.getElementById("inpGoal");
+  var goalFill = document.getElementById("goalFill");
+  var goalCaptionLeft = document.getElementById("goalCaptionLeft");
+  var goalCaptionRight = document.getElementById("goalCaptionRight");
+  var tipsList = document.getElementById("tipsList");
+  var historyBody = document.getElementById("historyBody");
+  var historyEmpty = document.getElementById("historyEmpty");
+
+  inpGoal.addEventListener("input", function(){
+    state.goal = clampNum(this.value);
+    persist(); renderPlan();
+  });
+
+  function renderPlan(){
+    inpGoal.value = state.goal || "";
+    var saved = projectedSavings();
+    var pct = state.goal > 0 ? Math.min(100, Math.max(0, Math.round((saved / state.goal) * 100))) : 0;
+    goalFill.style.width = pct + "%";
+    goalFill.style.background = saved < 0 ? "var(--danger-bright)" : "linear-gradient(90deg, var(--gold), var(--gold-bright))";
+    goalCaptionLeft.textContent = fmt(Math.max(0,saved)) + " projected";
+    goalCaptionRight.textContent = "Goal: " + fmt(state.goal);
+
+    var tips = [];
+    var spend = totalSpending();
+    var cats = allCategoriesForCalc().filter(function(c){ return c.amount > 0 && !c.locked; });
+    var lockedBig = allCategoriesForCalc().filter(function(c){ return c.amount > 0; }).sort(function(a,b){return b.amount-a.amount;})[0];
+
+    if(state.salary === 0){
+      tips.push("Add your monthly salary in the Overview tab so Dirham can work out what's realistic to save.");
+    }
+    if(saved < 0){
+      tips.push("Your spending plan is over budget by " + fmt(Math.abs(saved)) + ". Start with your largest category — every dirham trimmed there counts double.");
+    }
+    if(state.schoolFeesOn && state.schoolFeesAmount > 0){
+      tips.push("School fees are locked in at " + fmt(state.schoolFeesAmount) + " — plan around it first, then fit the rest of your budget in the space left over.");
+    }
+    if(state.lastMonthSpent > 0 && spend > 0){
+      var diff = state.lastMonthSpent - spend;
+      if(diff > 0){
+        tips.push("You're planning to spend " + fmt(diff) + " less than last month — keep that trend going for two or three months and it compounds fast.");
+      } else if(diff < 0){
+        tips.push("This month's plan is " + fmt(Math.abs(diff)) + " higher than last month. Worth checking what changed.");
+      }
+    }
+    if(lockedBig && lockedBig.amount > 0){
+      tips.push("Your biggest expense is " + escapeHtml(lockedBig.name) + " at " + fmt(lockedBig.amount) + ". A 10% cut there is worth " + fmt(lockedBig.amount * 0.1) + " a month.");
+    }
+    if(state.goal > 0 && saved >= state.goal){
+      tips.push("You're on pace to hit your " + fmt(state.goal) + " goal this month. Consider raising it slightly next month.");
+    } else if(state.goal > 0 && saved < state.goal && saved >= 0){
+      tips.push("You're " + fmt(state.goal - saved) + " short of your goal. Small trims across a couple of categories usually close gaps this size.");
+    }
+    if(tips.length === 0){
+      tips.push("Set a savings goal above and fill in a few categories to get personal tips here.");
+    }
+    tipsList.innerHTML = tips.map(function(t){ return "<li>" + t + "</li>"; }).join("");
+
+    renderHistory();
+  }
+
+  function renderHistory(){
+    if(!state.history.length){
+      historyBody.innerHTML = "";
+      historyEmpty.style.display = "block";
+      return;
+    }
+    historyEmpty.style.display = "none";
+    var rows = state.history.slice().reverse().map(function(h){
+      var cls = h.saved < 0 ? "neg" : "pos";
+      return "<tr><td>" + escapeHtml(h.date) + "</td><td>" + fmt(h.salary) + "</td><td>" + fmt(h.spending) + "</td><td class='" + cls + "'>" + fmt(h.saved) + "</td></tr>";
+    });
+    historyBody.innerHTML = rows.join("");
+  }
+
+  document.getElementById("logMonthBtn").addEventListener("click", function(){
+    var entry = {
+      date: new Date().toLocaleDateString("en-GB", { day:"2-digit", month:"short", year:"numeric" }),
+      salary: state.salary,
+      spending: totalSpending(),
+      saved: projectedSavings()
+    };
+    state.history.push(entry);
+    if(state.history.length > 200) state.history = state.history.slice(-200);
+    persist();
+    renderPlan();
+  });
+
+  /* ============================================================
+     RENDER ALL
+  ============================================================ */
+  function renderAll(){
+    refreshOverviewInputs();
+    renderCategoryList();
+    renderOverview();
+    renderBreakdown();
+    renderPlan();
+    gBest.textContent = Math.round(state.highScore).toLocaleString("en-US");
+  }
+
+  /* ============================================================
+     TUTORIAL MODAL
+  ============================================================ */
+  var HELP_STEPS = [
+    {
+      title: "Welcome to Dirham",
+      body: "<p>Dirham helps you plan next month's savings in AED. Start on the Overview tab: add your monthly salary and last month's total spending.</p>"
+    },
+    {
+      title: "Income & spending",
+      body: "<p>This tab lists your spending by category. The five categories with a \"Fixed category\" label always stay — you can edit their amounts, but not delete or rename them. Add your own categories below the list for anything else, like dining out or subscriptions.</p>"
+    },
+    {
+      title: "School fees, kept separate",
+      body: "<p>On Overview, switch on \"School fees for kids\" if that applies to you, then enter the monthly amount. It's tracked as its own locked line so it never gets mixed up with or overwritten by your other categories.</p>"
+    },
+    {
+      title: "Breakdown",
+      body: "<p>See exactly what your money goes to, as a chart and a list with percentages. Dirham flags your biggest category here — that's usually the fastest place to find real savings.</p>"
+    },
+    {
+      title: "Savings plan",
+      body: "<p>Set a monthly savings goal and watch the progress bar fill as your numbers change. You'll get a short list of tips based on your own numbers. When the month ends, press \"Log this month's savings\" to add it to your history.</p>"
+    },
+    {
+      title: "Coin Vault, the game",
+      body: "<p>Need a break? Head to the game tab and catch falling coins while dodging red bills. Works with a mouse, a finger on mobile, or the arrow keys on a keyboard. Your best score is saved with everything else.</p>"
+    },
+    {
+      title: "Save & load",
+      body: "<p>Everything saves automatically in this browser. To move your data to another device, press \"Save and generate code\" on the Save &amp; load tab — you'll get a line of numbers. Paste that same line into the Load box on any device to bring it all back.</p>"
+    }
+  ];
+  var helpIndex = 0;
+  var helpVeil = document.getElementById("helpVeil");
+  var helpTitle = document.getElementById("helpTitle");
+  var helpBody = document.getElementById("helpBody");
+  var helpStepCount = document.getElementById("helpStepCount");
+  var helpDots = document.getElementById("helpDots");
+  var helpBack = document.getElementById("helpBack");
+  var helpNext = document.getElementById("helpNext");
+
+  function renderHelpStep(){
+    var step = HELP_STEPS[helpIndex];
+    helpTitle.textContent = step.title;
+    helpBody.innerHTML = step.body;
+    helpStepCount.textContent = "Step " + (helpIndex+1) + " of " + HELP_STEPS.length;
+    helpBack.disabled = helpIndex === 0;
+    helpNext.textContent = helpIndex === HELP_STEPS.length - 1 ? "Done" : "Next";
+    helpDots.innerHTML = HELP_STEPS.map(function(_, i){
+      return '<span class="' + (i === helpIndex ? "on" : "") + '"></span>';
+    }).join("");
+  }
+  function openHelp(){ helpIndex = 0; renderHelpStep(); helpVeil.classList.add("show"); }
+  function closeHelp(){ helpVeil.classList.remove("show"); }
+  document.getElementById("openHelp").addEventListener("click", openHelp);
+  helpBack.addEventListener("click", function(){ if(helpIndex>0){ helpIndex--; renderHelpStep(); } });
+  helpNext.addEventListener("click", function(){
+    if(helpIndex < HELP_STEPS.length - 1){ helpIndex++; renderHelpStep(); }
+    else { closeHelp(); }
+  });
+  helpVeil.addEventListener("click", function(e){ if(e.target === helpVeil) closeHelp(); });
+  document.addEventListener("keydown", function(e){ if(e.key === "Escape") closeHelp(); });
+
+  /* first-visit auto tutorial */
+  if(!window.localStorage.getItem("dirham_seen_tutorial")){
+    setTimeout(function(){
+      openHelp();
+      try{ window.localStorage.setItem("dirham_seen_tutorial", "1"); }catch(e){}
+    }, 500);
+  }
+
+  /* ============================================================
+     SAVE / LOAD CODE  (a line of numbers)
+  ============================================================ */
+  var saveCodeBox = document.getElementById("saveCode");
+  var loadCodeBox = document.getElementById("loadCode");
+  var saveStatus = document.getElementById("saveStatus");
+  var loadStatus = document.getElementById("loadStatus");
+
+  function encodeState(obj){
+    var json = JSON.stringify(obj);
+    var b64 = btoa(unescape(encodeURIComponent(json)));
+    var codes = [];
+    for(var i=0;i<b64.length;i++){ codes.push(b64.charCodeAt(i)); }
+    return codes.join(" ");
+  }
+  function decodeState(str){
+    var codes = str.trim().split(/\s+/).map(Number);
+    if(!codes.length || codes.some(function(n){ return isNaN(n); })){
+      throw new Error("That doesn't look like a valid save code.");
+    }
+    var b64 = codes.map(function(c){ return String.fromCharCode(c); }).join("");
+    var json = decodeURIComponent(escape(atob(b64)));
+    return JSON.parse(json);
+  }
+
+  document.getElementById("genCodeBtn").addEventListener("click", function(){
+    persist();
+    var code = encodeState(state);
+    saveCodeBox.value = code;
+    saveStatus.textContent = "Saved — your code is ready to copy.";
+    saveStatus.classList.remove("err");
+  });
+
+  document.getElementById("copyCodeBtn").addEventListener("click", function(){
+    if(!saveCodeBox.value){ return; }
+    saveCodeBox.select();
+    saveCodeBox.setSelectionRange(0, 999999);
+    var done = function(){
+      saveStatus.textContent = "Copied to clipboard.";
+      saveStatus.classList.remove("err");
+    };
+    if(navigator.clipboard && navigator.clipboard.writeText){
+      navigator.clipboard.writeText(saveCodeBox.value).then(done).catch(function(){
+        try{ document.execCommand("copy"); done(); }catch(e){}
+      });
+    } else {
+      try{ document.execCommand("copy"); done(); }catch(e){}
+    }
+  });
+
+  document.getElementById("loadCodeBtn").addEventListener("click", function(){
+    var raw = loadCodeBox.value;
+    if(!raw || !raw.trim()){
+      loadStatus.textContent = "Paste a save code first.";
+      loadStatus.classList.add("err");
+      return;
+    }
+    try{
+      var parsed = decodeState(raw);
+      state = sanitizeState(parsed);
+      persist();
+      renderAll();
+      loadStatus.textContent = "Loaded successfully.";
+      loadStatus.classList.remove("err");
+    }catch(e){
+      loadStatus.textContent = "Couldn't read that code — check you copied the whole line.";
+      loadStatus.classList.add("err");
+    }
+  });
+
+  document.getElementById("resetAllBtn").addEventListener("click", function(){
+    if(!window.confirm("Reset all data on this device? This can't be undone unless you have a save code.")){
+      return;
+    }
+    state = deepClone(DEFAULT_STATE);
+    persist();
+    saveCodeBox.value = "";
+    loadCodeBox.value = "";
+    saveStatus.textContent = "";
+    loadStatus.textContent = "";
+    renderAll();
+  });
+
+  /* ============================================================
+     GAME — Coin Vault
+  ============================================================ */
+  var canvas = document.getElementById("gameCanvas");
+  var ctx = canvas.getContext("2d");
+  var gScore = document.getElementById("gScore");
+  var gLives = document.getElementById("gLives");
+  var gBest = document.getElementById("gBest");
+  var gStart = document.getElementById("gStart");
+  var gPause = document.getElementById("gPause");
+
+  var CW = 900, CH = 420;
+  function resizeCanvas(){
+    var rect = canvas.getBoundingClientRect();
+    var ratio = window.devicePixelRatio || 1;
+    CW = rect.width;
+    CH = rect.height;
+    canvas.width = Math.round(CW * ratio);
+    canvas.height = Math.round(CH * ratio);
+    ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
+  }
+  window.addEventListener("resize", resizeCanvas);
+
+  var game = {
+    running:false,
+    paused:false,
+    score:0,
+    lives:3,
+    vaultX: 450,
+    vaultW: 90,
+    vaultH: 26,
+    items: [],
+    spawnTimer:0,
+    spawnEvery:70,
+    speedMultiplier:1,
+    frame:0,
+    keys:{left:false, right:false},
+    rafId:null
+  };
+
+  function resetGame(){
+    game.running = false;
+    game.paused = false;
+    game.score = 0;
+    game.lives = 3;
+    game.items = [];
+    game.spawnTimer = 0;
+    game.spawnEvery = 70;
+    game.speedMultiplier = 1;
+    game.frame = 0;
+    game.vaultX = CW/2;
+    updateHud();
+  }
+
+  function updateHud(){
+    gScore.textContent = game.score;
+    gLives.textContent = game.lives;
+    gBest.textContent = Math.round(state.highScore).toLocaleString("en-US");
+  }
+
+  function spawnItem(){
+    var isCoin = Math.random() < 0.72;
+    game.items.push({
+      x: 20 + Math.random() * (CW - 40),
+      y: -20,
+      r: isCoin ? 16 : 14,
+      vy: (1.6 + Math.random()*1.4) * game.speedMultiplier,
+      coin: isCoin
+    });
+  }
+
+  function drawBackground(){
+    ctx.clearRect(0,0,CW,CH);
+    var grad = ctx.createLinearGradient(0,0,0,CH);
+    grad.addColorStop(0, "#142B26");
+    grad.addColorStop(1, "#0F211D");
+    ctx.fillStyle = grad;
+    ctx.fillRect(0,0,CW,CH);
+    ctx.strokeStyle = "rgba(244,239,225,0.05)";
+    ctx.lineWidth = 1;
+    for(var x=0; x<CW; x+=40){ ctx.beginPath(); ctx.moveTo(x,0); ctx.lineTo(x,CH); ctx.stroke(); }
+  }
+
+  function drawVault(){
+    var x = game.vaultX, y = CH - 46, w = game.vaultW, h = game.vaultH;
+    ctx.fillStyle = "#16302B";
+    ctx.strokeStyle = "#CBA135";
+    ctx.lineWidth = 2;
+    roundRect(ctx, x - w/2, y, w, h, 8);
+    ctx.fill();
+    ctx.stroke();
+    ctx.fillStyle = "#CBA135";
+    ctx.beginPath();
+    ctx.arc(x, y + h/2, 5, 0, Math.PI*2);
+    ctx.fill();
+  }
+
+  function roundRect(c, x, y, w, h, r){
+    c.beginPath();
+    c.moveTo(x+r, y);
+    c.arcTo(x+w, y, x+w, y+h, r);
+    c.arcTo(x+w, y+h, x, y+h, r);
+    c.arcTo(x, y+h, x, y, r);
+    c.arcTo(x, y, x+w, y, r);
+    c.closePath();
+  }
+
+  function drawItems(){
+    game.items.forEach(function(it){
+      if(it.coin){
+        ctx.fillStyle = "#E4C465";
+        ctx.strokeStyle = "#8A6A1E";
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.arc(it.x, it.y, it.r, 0, Math.PI*2);
+        ctx.fill();
+        ctx.stroke();
+        ctx.fillStyle = "#5A430F";
+        ctx.font = "bold 11px Manrope, sans-serif";
+        ctx.textAlign = "center";
+        ctx.textBaseline = "middle";
+        ctx.fillText("AED", it.x, it.y+1);
+      } else {
+        ctx.fillStyle = "#C1533A";
+        ctx.strokeStyle = "#7A2E1E";
+        ctx.lineWidth = 2;
+        roundRect(ctx, it.x - it.r, it.y - it.r*0.72, it.r*2, it.r*1.44, 4);
+        ctx.fill();
+        ctx.stroke();
+        ctx.fillStyle = "#F4EFE1";
+        ctx.font = "bold 10px Manrope, sans-serif";
+        ctx.textAlign = "center";
+        ctx.textBaseline = "middle";
+        ctx.fillText("BILL", it.x, it.y);
+      }
+    });
+  }
+
+  function gameLoop(){
+    if(!game.running || game.paused){ return; }
+    game.frame++;
+
+    if(game.keys.left) game.vaultX -= 7;
+    if(game.keys.right) game.vaultX += 7;
+    game.vaultX = Math.max(game.vaultW/2, Math.min(CW - game.vaultW/2, game.vaultX));
+
+    game.spawnTimer++;
+    if(game.spawnTimer >= game.spawnEvery){
+      game.spawnTimer = 0;
+      spawnItem();
+      if(game.spawnEvery > 30) game.spawnEvery -= 0.6;
+      game.speedMultiplier = Math.min(2.4, 1 + game.frame/2200);
+    }
+
+    var vy = CH - 46;
+    for(var i = game.items.length - 1; i >= 0; i--){
+      var it = game.items[i];
+      it.y += it.vy;
+      var caught = it.y > vy - 6 && it.y < vy + game.vaultH &&
+                   Math.abs(it.x - game.vaultX) < (game.vaultW/2 + it.r*0.6);
+      if(caught){
+        if(it.coin){ game.score += 10; }
+        else {
+          game.score = Math.max(0, game.score - 5);
+          game.lives -= 1;
+        }
+        game.items.splice(i,1);
+        updateHud();
+        if(game.lives <= 0){ endGame(); return; }
+        continue;
+      }
+      if(it.y > CH + 30){
+        if(it.coin){
+          game.lives -= 1;
+          updateHud();
+          if(game.lives <= 0){ endGame(); return; }
+        }
+        game.items.splice(i,1);
+      }
+    }
+
+    drawBackground();
+    drawItems();
+    drawVault();
+
+    game.rafId = requestAnimationFrame(gameLoop);
+  }
+
+  function endGame(){
+    game.running = false;
+    if(game.score > state.highScore){
+      state.highScore = game.score;
+      persist();
+    }
+    updateHud();
+    drawBackground();
+    ctx.fillStyle = "#F4EFE1";
+    ctx.font = "600 26px Fraunces, serif";
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+    ctx.fillText("Vault closed — score " + game.score, CW/2, CH/2 - 10);
+    ctx.font = "13px Manrope, sans-serif";
+    ctx.fillStyle = "#B9C8C2";
+    ctx.fillText("Press Start to try again", CW/2, CH/2 + 22);
+    gStart.textContent = "Start";
+    gStart.disabled = false;
+    gPause.disabled = true;
+  }
+
+  function startGame(){
+    resizeCanvas();
+    resetGame();
+    game.running = true;
+    game.paused = false;
+    gStart.textContent = "Restart";
+    gPause.disabled = false;
+    gPause.textContent = "Pause";
+    drawBackground();
+    drawVault();
+    game.rafId = requestAnimationFrame(gameLoop);
+  }
+
+  function pauseGame(){
+    if(!game.running) return;
+    game.paused = true;
+    if(game.rafId) cancelAnimationFrame(game.rafId);
+    if(gPause) gPause.textContent = "Resume";
+  }
+  function resumeGame(){
+    if(!game.running) return;
+    game.paused = false;
+    gPause.textContent = "Pause";
+    game.rafId = requestAnimationFrame(gameLoop);
+  }
+
+  gStart.addEventListener("click", startGame);
+  gPause.addEventListener("click", function(){
+    if(!game.running) return;
+    if(game.paused) resumeGame(); else pauseGame();
+  });
+
+  function pointerToVaultX(clientX){
+    var rect = canvas.getBoundingClientRect();
+    return (clientX - rect.left) * (CW / rect.width);
+  }
+  canvas.addEventListener("pointerdown", function(e){
+    if(!game.running || game.paused) return;
+    game.vaultX = pointerToVaultX(e.clientX);
+  });
+  canvas.addEventListener("pointermove", function(e){
+    if(!game.running || game.paused) return;
+    if(e.pressure === 0 && e.pointerType === "mouse" && e.buttons === 0) return;
+    game.vaultX = pointerToVaultX(e.clientX);
+  });
+  document.addEventListener("keydown", function(e){
+    if(document.querySelector('.tabs button[data-tab="game"]').classList.contains("active")){
+      if(e.key === "ArrowLeft" || e.key === "a" || e.key === "A") game.keys.left = true;
+      if(e.key === "ArrowRight" || e.key === "d" || e.key === "D") game.keys.right = true;
+    }
+  });
+  document.addEventListener("keyup", function(e){
+    if(e.key === "ArrowLeft" || e.key === "a" || e.key === "A") game.keys.left = false;
+    if(e.key === "ArrowRight" || e.key === "d" || e.key === "D") game.keys.right = false;
+  });
+  document.addEventListener("visibilitychange", function(){
+    if(document.hidden) pauseGame();
+  });
+
+  /* ============================================================
+     INIT
+  ============================================================ */
+  resizeCanvas();
+  drawBackground();
+  ctx.fillStyle = "#B9C8C2";
+  ctx.font = "14px Manrope, sans-serif";
+  ctx.textAlign = "center";
+  ctx.textBaseline = "middle";
+  ctx.fillText("Press Start to play", CW/2, CH/2);
+  renderAll();
+
+})();
+</script>
+</body>
+</html>
